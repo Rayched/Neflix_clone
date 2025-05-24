@@ -1,12 +1,17 @@
 import styled from "styled-components";
-import {animate, motion, scale} from "framer-motion";
+import {animate, delay, easeIn, motion, scale} from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import SearchBtn from "../modules/SearchBtn";
 
 interface I_ItemList {
     Id: string;
     Name: string;
-}
+};
+
+interface I_SearchBar {
+    isSearch: boolean;
+};
 
 const NavBar = styled.nav`
     display: flex;
@@ -46,14 +51,48 @@ const Items = styled.ul`
 const Item = styled(motion.li)`
     margin-left: 20px;
     font-weight: ${(props) => props.id === props.value ? "bold" : "none"};
-    
 `;
 
-const SearchBtn = styled.button``;
+const SearchBar = styled(motion.div)`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: ${(props) => props.theme.textColor};
+    border: 1px solid ${(props) => props.theme.textColor};
+    background-color: ${(props) => props.theme.bgColor};
+    padding: 2px;
+    padding-left: 3px;
+    position: absolute;
+    right: 100px;
+    transform-origin: right center;
+`;
+
+const SearchInput = styled(motion.input)`
+    display: block;
+    background-color: inherit;
+    border: 0px;
+    color: ${(props) => props.theme.textColor};
+    &:focus {
+        outline: none;
+    };
+`;
+
 const AlertBtn = styled.button``;
 const ProfileBtn = styled.button``;
 
+const SearchVariants = {
+    start: {
+        scaleX: 0,
+        x: 5
+    },
+    end: {
+        scaleX: 1,
+        x: 0,
+    },
+};
 function Header(){
+    const [Search, setSearch] = useState(false);
+
     const [NowItem, setItem] = useState("");
     const ItemList: I_ItemList[] = [
         {Id: "", Name: "홈"},
@@ -94,7 +133,14 @@ function Header(){
                 </Items>
             </Container>
             <Container>
-                <SearchBtn>검색</SearchBtn>
+                {
+                    Search ? (
+                        <SearchBar variants={SearchVariants} initial="start" animate="end" transition={{type: "linear"}}>
+                            <SearchBtn isSearch={Search} setSearch={setSearch}/>
+                            <SearchInput type="text" placeholder="제목, 사람, 장르"/>
+                        </SearchBar>
+                    ) : <SearchBtn isSearch={Search} setSearch={setSearch}/>
+                }
                 <AlertBtn>알림</AlertBtn>
                 <ProfileBtn>프로필</ProfileBtn>
             </Container>
