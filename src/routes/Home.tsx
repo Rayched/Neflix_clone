@@ -1,14 +1,10 @@
 import styled from "styled-components";
 
-const HomeWrappers = styled.div`
-    /*background-color: ${(props) => props.theme.bgColor};*/
-    width: 100vw;
-    height: 80vh;
-`;
+const HomeWrappers = styled.div``;
 
 function Home(){
     return (
-        <HomeWrappers></HomeWrappers>
+        <HomeWrappers>Home</HomeWrappers>
     );
 };
 
