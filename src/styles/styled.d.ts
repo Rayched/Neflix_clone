@@ -2,6 +2,7 @@ import "styled-components";
 
 declare module "styled-components" {
     export interface DefaultTheme {
+        logoColor: string;
         headerColor: string;
         bgColor: string;
         contentsColor: string;

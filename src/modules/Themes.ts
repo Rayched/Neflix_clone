@@ -5,5 +5,6 @@ export const Themes: DefaultTheme = {
     bgColor: "#141414",
     contentsColor: "#181818",
     barColor: "#ffffff",
-    textColor: "#ffffff"
+    textColor: "#ffffff",
+    logoColor: "#E50914"
 };
