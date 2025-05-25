@@ -1,9 +1,11 @@
 //Fetch Function's
 
-const API_Key = "70a869d6d1e60688f9bc0481ad7a9971";
+import { API_Keys } from "./api_keys";
+
+const api_key = API_Keys;
 const Based_Url = "https://api.themoviedb.org/3";
 
-interface I_MovieData {
+export interface I_MovieData {
     adult?: boolean;
     backdrop_path?: string;
     genre_ids?: number[];
@@ -33,8 +35,18 @@ export interface I_getMoviesResult {
 
 export async function getMovies(){
     const MoviesData = await(await(
-        await fetch(`${Based_Url}/movie/now_playing?api_key=${API_Key}&language=ko&page=1&region=kr`)
+        await fetch(`${Based_Url}/movie/now_playing?api_key=${api_key}&language=ko&page=1&region=kr`)
     ).json());
 
     return MoviesData;
+};
+
+export async function getMovieDetails(movieId?: string) {
+    const targets = movieId;
+
+    const DetailData = await(await(
+        await fetch(`${Based_Url}/movie/${targets}?api_key=${api_key}&language=ko`)
+    ).json());
+
+    return DetailData;
 };

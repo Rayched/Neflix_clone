@@ -1,10 +1,18 @@
 import styled from "styled-components";
 
-const Test = styled.div``;
+const MovieWrapper = styled.div`
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: ${(props) => props.theme.bgColor};
+`;
 
 function Movies(){
     return (
-        <Test>Movie Page</Test>
+        <MovieWrapper>Movies</MovieWrapper>
     );
 };
 

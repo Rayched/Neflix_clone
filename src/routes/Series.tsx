@@ -1,6 +1,18 @@
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: ${(props) => props.theme.bgColor};
+`;
+
 function Series(){
     return (
-        <div>시리즈</div>
+        <Wrapper>시리즈</Wrapper>
     );
 };
 

@@ -10,6 +10,7 @@ function Router(){
             <Header />
             <Routes>
                 <Route path="/" element={<Home />}/>
+                <Route path="movies/:movieId" element={<Home />}/>
                 <Route path="/series" element={<Series />}/>
                 <Route path="/movies" element={<Movies />}/>
             </Routes>
