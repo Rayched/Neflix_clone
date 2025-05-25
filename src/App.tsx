@@ -6,13 +6,11 @@ import Header from './components/Header';
 
 const Wrapper = styled.div`
   width: 100vw;
-  height: 100em;
   display: flex;
   justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.textColor};
-  //background: ${(props) => props.theme.bgColor};
-  background: rgb(52, 152, 219);
+  background: ${(props) => props.theme.bgColor};
 `;
 
 function App() {

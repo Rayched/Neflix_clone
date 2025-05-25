@@ -4,10 +4,7 @@ import App from './App';
 import {createGlobalStyle, ThemeProvider} from "styled-components";
 import {RecoilRoot} from "recoil";
 import { Themes } from './modules/Themes';
-
-const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
-);
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -37,6 +34,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     line-height: 1;
+    color: ${(props) => props.theme.textColor}
   }
   ol, ul {
     list-style: none;
@@ -59,12 +57,20 @@ const GlobalStyle = createGlobalStyle`
   }
 `;
 
+const queryClient = new QueryClient();
+
+const root = ReactDOM.createRoot(
+  document.getElementById('root') as HTMLElement
+);
+
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={Themes}>
       <RecoilRoot>
-        <GlobalStyle />
-        <App />
+        <QueryClientProvider client={queryClient}>
+          <GlobalStyle />
+          <App />
+        </QueryClientProvider>
       </RecoilRoot>
     </ThemeProvider>
   </React.StrictMode>

@@ -2,15 +2,11 @@ import styled from "styled-components";
 import { motion, useAnimation, useMotionValueEvent, useScroll } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import SearchBtn from "../modules/SearchBtn";
+import SearchBtn from "./SearchBtn";
 
 interface I_ItemList {
     Id: string;
     Name: string;
-};
-
-interface I_SearchBar {
-    isSearch: boolean;
 };
 
 const NavBar = styled(motion.nav)`
@@ -49,7 +45,10 @@ const Items = styled.ul`
 
 const Item = styled(motion.li)`
     margin-left: 20px;
-    font-weight: ${(props) => props.id === props.value ? "bold" : "none"};
+    color: ${(props) => props.theme.textColor};
+    &:hover {
+        color: ${(props) => props.id !== props.value ? "#dbdbdb" : "#ffffff"};
+    };
 `;
 
 const SearchBar = styled(motion.div)`
@@ -96,6 +95,22 @@ const ProfileBtn = styled.div`
     font-size: 27px;
     margin-right: 25px;
 `;
+
+const ItemVariants = {
+    Selected: {
+        fontWeight: 600,
+        transition: {
+            delay: 1,
+            duration: 1
+        }
+    },
+    NonSelected: {
+        fontWeight: "normal"
+    },
+    transition: {
+        type: "linear",
+    }
+};
 
 const SearchVariants = {
     start: {
@@ -161,6 +176,9 @@ function Header(){
                                 <Item 
                                     id={data.Id}
                                     value={NowItem}
+                                    variants={ItemVariants}
+                                    initial="NonSelected"
+                                    animate={data.Id === NowItem ? "Selected" : "NonSelected"}
                                     onClick={() => Switched(data.Id)}
                                 >
                                     <Link to={`${data.Id}`}>{data.Name}</Link>
