@@ -2,18 +2,22 @@ import { useQuery } from "@tanstack/react-query";
 import styled from "styled-components";
 import { getMovies, I_getMoviesResult } from "../modules/Fetchs";
 import { MakeImgPath } from "../modules/utils";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence, delay } from "framer-motion";
+import { useState } from "react";
 
 interface I_Banner {
     bgPhotoURL: string;
 }
 
 const HomeWrappers = styled.div`
+    width: 100vw;
     height: 100vh;
-    background-color: inherit;
+    background: ${(props) => props.theme.bgColor};
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow-x: hidden;
 `;
 
 const Loader = styled.div`
@@ -38,13 +42,58 @@ const Banner = styled.div<I_Banner>`
 const Title = styled.h2`
     font-size: 35px;
     margin-bottom: 20px;
-    position: absolute;
-    top: 500px;
-    left: 15px;
 `;
 
-const Slider = styled.div``;
-const SlideData = styled(motion.div)``;
+const SliderBox = styled.div`
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    
+    align-items: center;
+`;
+
+const Slider = styled(motion.div)`
+    display: grid;
+    gap: 10px;
+    grid-template-columns: repeat(6, 1fr);
+    width: 100%;
+    position: absolute;
+`;
+
+const ContentItem = styled(motion.div)`
+    color: black;
+    background-color: white;
+    border: 1px solid black;
+    width: 15em;
+    height: 10em;
+`;
+
+const SliderVariants = {
+    hidden: {
+        x: 1000,
+        transition: {
+            bounce: 0
+        }
+    },
+    visible: {
+        x: -750,
+        transition: {
+            bounce: 0,
+            delay: 1,
+            duration: 1
+        }
+    },
+    exit: {
+       x: -1500,
+       transition: {
+            bounce: 0,
+       }
+    },
+    transition: {
+        type: "linear",
+        bounce: 0
+    }
+};
 
 function Home(){
     const {isLoading, data} = useQuery<I_getMoviesResult>({
@@ -52,9 +101,11 @@ function Home(){
         queryFn: getMovies
     });
 
-    const BgPhotoURL = MakeImgPath(data?.results[0].backdrop_path);
+    const [Index, setIndex] = useState(0);
 
-    console.log(BgPhotoURL);
+    const IncreaseIdx = () => setIndex((prev) => prev + 1);
+
+    const BgPhotoURL = MakeImgPath(data?.results[0].backdrop_path);
 
     return (
         <HomeWrappers>
@@ -62,9 +113,26 @@ function Home(){
                 isLoading ? <Loader>로딩 중...</Loader>
                 : (
                 <>
-                    <Banner bgPhotoURL={BgPhotoURL}>
+                    <Banner bgPhotoURL={BgPhotoURL} onClick={IncreaseIdx}>
                         <Title>{data?.results[0].title}</Title>
                     </Banner>
+                    <SliderBox>
+                        <AnimatePresence>
+                            <Slider 
+                                variants={SliderVariants} 
+                                key={Index} 
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                            >
+                                {
+                                    [1, 2, 3, 4, 5, 6].map((num) => {
+                                        return <ContentItem key={num}>{num}</ContentItem>
+                                    })
+                                }
+                            </Slider>
+                        </AnimatePresence>
+                    </SliderBox>
                 </>
             )}
         </HomeWrappers>
