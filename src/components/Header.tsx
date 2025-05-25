@@ -134,7 +134,7 @@ const NavBarVariants = {
 
 function Header(){
     const [Search, setSearch] = useState(false);
-    const {scrollY, scrollYProgress} = useScroll();
+    const {scrollY} = useScroll();
 
     const NavAnimation = useAnimation();
 
@@ -150,7 +150,6 @@ function Header(){
     };
 
     useMotionValueEvent(scrollY, "change", (latest) => {
-        console.log(latest);
         if(latest < 10){
             NavAnimation.start("Default");
         } else {

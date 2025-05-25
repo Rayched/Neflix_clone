@@ -3,7 +3,8 @@ import styled from "styled-components";
 import { getMovies, I_getMoviesResult } from "../modules/Fetchs";
 import { MakeImgPath } from "../modules/utils";
 import { motion, AnimatePresence, delay } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useWindowDimensions from "../components/Dimensions";
 
 interface I_Banner {
     bgPhotoURL: string;
@@ -49,43 +50,56 @@ const SliderBox = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    width: 100%;
+
+    .Slider_Title {
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        align-items: center;
+        margin-top: 15px;
+        margin-left: 5px;
+    }
 `;
 
 const Slider = styled(motion.div)`
     display: grid;
-    gap: 10px;
+    gap: 8px;
     grid-template-columns: repeat(6, 1fr);
     width: 100%;
     position: absolute;
-    top: 50px;
+    top: 40px;
 `;
 
-const ContentItem = styled(motion.div)`
-    color: black;
-    background-color: white;
+const ContentItem = styled(motion.div)<I_Banner>`
+    color: ${(props) => props.theme.textColor};
+    background-image: ${(props) => `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.4)), url(${props.bgPhotoURL})`};
+    background-size: cover;
     border: 1px solid black;
-    width: 15em;
-    height: 10em;
+    width: 240px;
+    height: 130px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    text-align: right;
 `;
 
 const SliderVariants = {
     initial: {
-        x: 1000,
+        x: window.innerWidth,
         transition: {
             bounce: 0
         }
     },
     animate: {
-        x: -750,
+        x: 0,
         transition: {
             bounce: 0,
-            delay: 1,
             duration: 1
         }
     },
     exit: {
-       x: -2000,
+       x: -window.innerWidth,
        transition: {
             bounce: 0,
             duration: 0.5
@@ -103,11 +117,24 @@ function Home(){
         queryFn: getMovies
     });
 
+    const offset = 6;
+    const Width = useWindowDimensions();
+
     const [Index, setIndex] = useState(0);
 
-    const IncreaseIdx = () => setIndex((prev) => prev + 1);
+    const IncreaseIdx = () => {
+        const TotalMovies = Number(data?.results.length) - 1;
+        const MaxIdx = Math.floor(TotalMovies / offset);
+        console.log(MaxIdx);
 
-    const BgPhotoURL = MakeImgPath(data?.results[0].backdrop_path);
+        if(Index < MaxIdx){
+            setIndex((prev) => prev + 1);
+        } else {
+            setIndex(0);
+        }
+    };
+
+    useEffect(() => console.log(data));
 
     return (
         <HomeWrappers>
@@ -115,21 +142,26 @@ function Home(){
                 isLoading ? <Loader>로딩 중...</Loader>
                 : (
                 <>
-                    <Banner bgPhotoURL={BgPhotoURL} onClick={IncreaseIdx}>
+                    <Banner bgPhotoURL={MakeImgPath(data?.results[0].backdrop_path)} onClick={IncreaseIdx}>
                         <Title>{data?.results[0].title}</Title>
                     </Banner>
                     <SliderBox>
+                        <div className="Slider_Title">Movies</div>
                         <AnimatePresence initial={false}>
                             <Slider 
-                                variants={SliderVariants} 
                                 key={Index} 
-                                initial="initial"
-                                animate="animate"
-                                exit="exit"
+                                initial={{x: Width + 10}}
+                                animate={{x: 0}}
+                                exit={{x: -Width - 10}}
+                                transition={{type: "linear", bounce: 0, duration: 0.5}}
                             >
                                 {
-                                    [1, 2, 3, 4, 5, 6].map((num) => {
-                                        return <ContentItem key={num}>{num}</ContentItem>
+                                    data?.results.slice(1).slice(Index * offset, offset * Index + offset).map((data, idx) => {
+                                        return (
+                                            <ContentItem key={data.id} bgPhotoURL={MakeImgPath(data.backdrop_path, "w200")}>
+                                                {data.title}
+                                            </ContentItem>
+                                        );
                                     })
                                 }
                             </Slider>
