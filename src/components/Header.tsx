@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {animate, delay, easeIn, motion, scale} from "framer-motion";
+import { motion, useAnimation, useMotionValueEvent, useScroll } from "framer-motion";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import SearchBtn from "../modules/SearchBtn";
@@ -13,14 +13,13 @@ interface I_SearchBar {
     isSearch: boolean;
 };
 
-const NavBar = styled.nav`
+const NavBar = styled(motion.nav)`
     display: flex;
     justify-content: space-between;
     align-items: center;
     position: fixed;
-    background-color: ${(props) => props.theme.headerColor};
     color: ${(props) => props.theme.textColor};
-    width: 100%;
+    width: 100vw;
     top: 0%;
     height: 70px;
     font-size: 14px;
@@ -58,12 +57,12 @@ const SearchBar = styled(motion.div)`
     justify-content: center;
     align-items: center;
     color: ${(props) => props.theme.textColor};
-    border: 1px solid ${(props) => props.theme.textColor};
     background-color: ${(props) => props.theme.bgColor};
+    border: 1px solid ${(props) => props.theme.textColor};
     padding: 2px;
     padding-left: 3px;
     position: absolute;
-    right: 100px;
+    right: 155px;
     transform-origin: right center;
 `;
 
@@ -77,21 +76,52 @@ const SearchInput = styled(motion.input)`
     };
 `;
 
-const AlertBtn = styled.button``;
-const ProfileBtn = styled.button``;
+const AlertBtn = styled.button`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    border: 0px;
+    margin: 0px 15px;
+`;
+const ProfileBtn = styled.div`
+    width: 35px;
+    height: 35px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(48, 51, 107);
+    border: 1px solid ${(props) => props.theme.textColor};
+    border-radius: 4px;
+    font-size: 27px;
+    margin-right: 25px;
+`;
 
 const SearchVariants = {
     start: {
         scaleX: 0,
-        x: 5
+        x: 10
     },
     end: {
         scaleX: 1,
         x: 0,
     },
 };
+
+const NavBarVariants = {
+    Default: {
+        background: "rgba(20, 20, 20, 0)"
+    },
+    Scrolls: {
+        background: "rgba(20, 20, 20, 1)"
+    }
+};
+
 function Header(){
     const [Search, setSearch] = useState(false);
+    const {scrollY} = useScroll();
+
+    const NavAnimation = useAnimation();
 
     const [NowItem, setItem] = useState("");
     const ItemList: I_ItemList[] = [
@@ -104,8 +134,16 @@ function Header(){
         setItem(targets);
     };
 
+    useMotionValueEvent(scrollY, "change", (latest) => {
+        if(latest < 10){
+            NavAnimation.start("Default");
+        } else {
+            NavAnimation.start("Scrolls")
+        }
+    });;
+
     return (
-        <NavBar>
+        <NavBar variants={NavBarVariants} animate={NavAnimation}>
             <Container>
                     <Link to={"/"}>
                     <Logo 
@@ -136,13 +174,17 @@ function Header(){
                 {
                     Search ? (
                         <SearchBar variants={SearchVariants} initial="start" animate="end" transition={{type: "linear"}}>
-                            <SearchBtn isSearch={Search} setSearch={setSearch}/>
+                            <SearchBtn setSearch={setSearch}/>
                             <SearchInput type="text" placeholder="제목, 사람, 장르"/>
                         </SearchBar>
-                    ) : <SearchBtn isSearch={Search} setSearch={setSearch}/>
+                    ) : <SearchBtn setSearch={setSearch}/>
                 }
-                <AlertBtn>알림</AlertBtn>
-                <ProfileBtn>프로필</ProfileBtn>
+                <AlertBtn>
+                    <svg xmlns="http://www.w3.org/2000/svg" height="25" width="36" viewBox="0 0 448 512">
+                        <path fill="#ffffff" d="M224 0c-17.7 0-32 14.3-32 32l0 19.2C119 66 64 130.6 64 208l0 25.4c0 45.4-15.5 89.5-43.8 124.9L5.3 377c-5.8 7.2-6.9 17.1-2.9 25.4S14.8 416 24 416l400 0c9.2 0 17.6-5.3 21.6-13.6s2.9-18.2-2.9-25.4l-14.9-18.6C399.5 322.9 384 278.8 384 233.4l0-25.4c0-77.4-55-142-128-156.8L256 32c0-17.7-14.3-32-32-32zm0 96c61.9 0 112 50.1 112 112l0 25.4c0 47.9 13.9 94.6 39.7 134.6L72.3 368C98.1 328 112 281.3 112 233.4l0-25.4c0-61.9 50.1-112 112-112zm64 352l-64 0-64 0c0 17 6.7 33.3 18.7 45.3s28.3 18.7 45.3 18.7s33.3-6.7 45.3-18.7s18.7-28.3 18.7-45.3z"/>
+                    </svg>
+                </AlertBtn>
+                <ProfileBtn>🙍‍♂️</ProfileBtn>
             </Container>
         </NavBar>
     );

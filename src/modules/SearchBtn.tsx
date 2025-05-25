@@ -1,7 +1,7 @@
 import styled from "styled-components"
 
 interface I_SearchBtn {
-    isSearch: boolean;
+    isSearch?: boolean;
     setSearch: Function;
 };
 
@@ -9,10 +9,10 @@ const Box = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: ${(props) => props.theme.bgColor};
+    background-color: inherit;
 `;
 
-function SearchBtn({isSearch, setSearch}: I_SearchBtn){
+function SearchBtn({setSearch}: I_SearchBtn){
     const BtnClicked = () => setSearch((prev: boolean) => !prev);
 
     return (
