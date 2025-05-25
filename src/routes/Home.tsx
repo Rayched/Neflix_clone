@@ -7,11 +7,10 @@ import { useState } from "react";
 
 interface I_Banner {
     bgPhotoURL: string;
-}
+};
 
 const HomeWrappers = styled.div`
     width: 100vw;
-    height: 100vh;
     background: ${(props) => props.theme.bgColor};
     display: flex;
     flex-direction: column;
@@ -41,14 +40,15 @@ const Banner = styled.div<I_Banner>`
 
 const Title = styled.h2`
     font-size: 35px;
-    margin-bottom: 20px;
+    position: absolute;
+    left: 5%;
+    top: 70%;
 `;
 
 const SliderBox = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    
     align-items: center;
 `;
 
@@ -58,6 +58,7 @@ const Slider = styled(motion.div)`
     grid-template-columns: repeat(6, 1fr);
     width: 100%;
     position: absolute;
+    top: 50px;
 `;
 
 const ContentItem = styled(motion.div)`
@@ -69,13 +70,13 @@ const ContentItem = styled(motion.div)`
 `;
 
 const SliderVariants = {
-    hidden: {
+    initial: {
         x: 1000,
         transition: {
             bounce: 0
         }
     },
-    visible: {
+    animate: {
         x: -750,
         transition: {
             bounce: 0,
@@ -84,9 +85,10 @@ const SliderVariants = {
         }
     },
     exit: {
-       x: -1500,
+       x: -2000,
        transition: {
             bounce: 0,
+            duration: 0.5
        }
     },
     transition: {
@@ -117,12 +119,12 @@ function Home(){
                         <Title>{data?.results[0].title}</Title>
                     </Banner>
                     <SliderBox>
-                        <AnimatePresence>
+                        <AnimatePresence initial={false}>
                             <Slider 
                                 variants={SliderVariants} 
                                 key={Index} 
-                                initial="hidden"
-                                animate="visible"
+                                initial="initial"
+                                animate="animate"
                                 exit="exit"
                             >
                                 {
