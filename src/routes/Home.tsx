@@ -111,6 +111,16 @@ const ContentInfo = styled(motion.div)`
     }
 `;
 
+const DetailWrapper = styled.div`
+    position: absolute;
+    width: 100vw;
+    height: 80em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(20, 20, 20, 0.8);
+`;
+
 const Var_ContentsItem = {
     initial: {
         scale: 1,
@@ -151,8 +161,6 @@ function Home(){
 
     const [Index, setIndex] = useState(0);
 
-    let targetIdx: number|undefined = 0;
-
     const setMovieIds = useSetRecoilState(MovieId_Atoms);
 
     //Slider 전환 (Page 변환)
@@ -168,11 +176,16 @@ function Home(){
     };
 
     //ContentItem 클릭 시, 해당 콘텐츠의 id를 전송하는 func
-    const onContentItemClicked = (targetId?: number) => {
+    const onContentItemClicked = async (targetId?: number) => {
+        if(targetId !== undefined){
+            await setMovieIds(targetId);
+        } else {
+            return;
+        }
         navigate(`/movies/${targetId}`);
     };
-
-    console.log(data);
+    
+    useEffect(() => console.log(data));
 
     return (
         <HomeWrappers>
@@ -198,6 +211,7 @@ function Home(){
                                         return (
                                             <ContentItem 
                                                 key={data.id} 
+                                                layoutId={String(data.id)}
                                                 bgPhotoURL={MakeImgPath(data.backdrop_path, "w200")}
                                                 variants={Var_ContentsItem}
                                                 initial="initial"
@@ -217,7 +231,12 @@ function Home(){
                     </SliderBox>
                     <AnimatePresence>
                         {
-                            MovieMatch !== null ? <MovieDetails /> : null
+                            MovieMatch === null ? null 
+                            : (
+                            <DetailWrapper>
+                                <MovieDetails layoutId={MovieMatch.params.movieId}/>
+                            </DetailWrapper>
+                            )
                         }
                     </AnimatePresence>
                 </>
