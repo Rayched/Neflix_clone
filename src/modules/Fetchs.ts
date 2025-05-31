@@ -34,10 +34,6 @@ export interface I_getMoviesResult {
     total_results?: number;
 };
 
-interface I_DetailData {
-    targetId?: string;
-};
-
 interface I_genres {
     id?: number;
     name?: string;
@@ -50,6 +46,11 @@ export interface I_MovieDetails {
     backdrop_path?: string;
     release_date?: string;
     overview?: string;
+};
+
+interface I_Searchs {
+    keyword?: string;
+    region: string;
 };
 
 export async function getMovies(){
@@ -82,4 +83,12 @@ export async function getMovieDetails(targetId?: string){
     } else {
         return getAPIDatas;
     }
+};
+
+export async function getSearchData(data: I_Searchs) {
+    const getSearchData = await(await(
+        await fetch(`${Based_Url}/search/multi?query=${data.keyword}&language=${data.region}&page=1&api_key=${api_key}`)
+    ).json());
+    
+    return getSearchData.results;
 };

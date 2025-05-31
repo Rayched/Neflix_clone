@@ -3,6 +3,7 @@ import Home from "./Home";
 import Series from "./Series";
 import Header from "../components/Header";
 import Movies from "./Movies";
+import SearchPage from "./SearchPage";
 
 function Router(){
     return (
@@ -13,6 +14,7 @@ function Router(){
                 <Route path="movies/:movieId" element={<Home />}/>
                 <Route path="/series" element={<Series />}/>
                 <Route path="/movies" element={<Movies />}/>
+                <Route path="/search" element={<SearchPage />} />
             </Routes>
         </BrowserRouter>
     );

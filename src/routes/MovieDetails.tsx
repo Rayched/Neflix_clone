@@ -72,7 +72,29 @@ const Box_Bodys = styled.div`
     margin-top: 15px;
 `;
 
-const Movie_Title = styled.div``;
+const Movie_Title = styled.div`
+    padding: 20px;
+`;
+
+const Movie_Genres = styled.div`
+    padding: 10px 20px;
+`;
+
+const ReleaseBox = styled.div`
+    padding: 10px 20px;
+
+    .ReleaseBox_title {
+        font-weight: bold;
+    };
+`;
+
+const Overviews = styled.div`
+    width: 35em;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+`;
 
 const Var_Container = {
     initial: {
@@ -87,9 +109,6 @@ const Var_Container = {
             bounce: 0,
         }
     },
-    end: {
-        
-    }
 };
 
 function MovieDetails({layoutId}: I_MovieDetailsProps){
@@ -121,10 +140,13 @@ function MovieDetails({layoutId}: I_MovieDetailsProps){
                             </Close_btn>
                         </Box_Headers>
                         <Box_Bodys>
-                            <div>{DetailData?.title}</div>
-                            <div>
-                                장르: {DetailData?.genres?.map((data) => <span key={data.id}>{data.name}, </span>)}
-                            </div>
+                            <Movie_Title>{DetailData?.title}</Movie_Title>
+                            <Movie_Genres>장르: {DetailData?.genres?.map((data) => <span key={data.id}>{data.name}, </span>)}</Movie_Genres>
+                            <ReleaseBox>
+                                <span className="ReleaseBox_title">개봉 일: </span>
+                                {DetailData?.release_date}
+                            </ReleaseBox>
+                            <Overviews>{DetailData?.overview}</Overviews>
                         </Box_Bodys>
                     </Box>
                 )

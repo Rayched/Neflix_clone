@@ -64,6 +64,7 @@ const SliderBox = styled.div`
     display: flex;
     flex-direction: row;
     width: 100%;
+    margin-bottom: 50px;
 `;
 
 const Slider = styled(motion.div)`
@@ -189,8 +190,6 @@ function Home(){
     const OverlayClicked = () => {
         navigate(`/`);
     };
-    
-    useEffect(() => console.log(data));
 
     return (
         <HomeWrappers>
