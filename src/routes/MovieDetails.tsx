@@ -87,6 +87,9 @@ const Var_Container = {
             bounce: 0,
         }
     },
+    end: {
+        
+    }
 };
 
 function MovieDetails({layoutId}: I_MovieDetailsProps){

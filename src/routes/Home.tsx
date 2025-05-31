@@ -111,8 +111,8 @@ const ContentInfo = styled(motion.div)`
     }
 `;
 
-const DetailWrapper = styled.div`
-    position: absolute;
+const DetailWrapper = styled(motion.div)`
+    position: fixed;
     width: 100vw;
     height: 80em;
     display: flex;
@@ -156,6 +156,7 @@ function Home(){
 
     const offset = 6;
     const Width = useWindowDimensions();
+
     const navigate = useNavigate();
     const MovieMatch = useMatch("/movies/:movieId");
 
@@ -183,6 +184,10 @@ function Home(){
             return;
         }
         navigate(`/movies/${targetId}`);
+    };
+
+    const OverlayClicked = () => {
+        navigate(`/`);
     };
     
     useEffect(() => console.log(data));
@@ -233,8 +238,8 @@ function Home(){
                         {
                             MovieMatch === null ? null 
                             : (
-                            <DetailWrapper>
-                                <MovieDetails layoutId={MovieMatch.params.movieId}/>
+                            <DetailWrapper onClick={OverlayClicked} exit={{opacity: 0}}>
+                                <MovieDetails layoutId={MovieMatch.params.movieId} />
                             </DetailWrapper>
                             )
                         }
